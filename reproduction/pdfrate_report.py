@@ -19,8 +19,8 @@ along with Mimicus.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################
 pdfrate_report.py
 
-Given a list of PDF files, this script will display PDFrate reports 
-which are already in. 
+Given a list of PDF files, this script will display PDFrate reports
+which are already in.
 
 Created on June 12, 2013
 '''
@@ -34,16 +34,16 @@ from mimicus.tools.pdfratequeryhandler import PdfrateQueryHandler
 def main():
     # Setup argument parser
     parser = ArgumentParser()
-    parser.add_argument('pdfs', 
+    parser.add_argument('pdfs',
                         help='Input PDFs (directory or file with path list)')
-    parser.add_argument('--with-unknown', action='store_true', default=False, 
+    parser.add_argument('--with-unknown', action='store_true', default=False,
                         help='Display queries for unknown files')
-    parser.add_argument('--with-waiting', action='store_true', default=False, 
+    parser.add_argument('--with-waiting', action='store_true', default=False,
                         help='Display pending queries')
-    
+
     # Process arguments
     args = parser.parse_args()
-    
+
     pdfs = sorted(utility.get_pdfs(args.pdfs))
     handler = PdfrateQueryHandler()
     for pdf in pdfs:

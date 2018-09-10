@@ -37,7 +37,7 @@ class MyInstall(install):
     '''
     def run(self):
         '''
-        Runs after installation. 
+        Runs after installation.
         '''
         install.run(self)
         from mimicus import config
@@ -48,27 +48,33 @@ class MyDevelop(develop):
     '''
     def run(self):
         '''
-        Runs after develop-mode installation. 
+        Runs after develop-mode installation.
         '''
         develop.run(self)
         from mimicus import config
 
-setup(name='mimicus',
-      version='1.0',
-      description='A library for adversarial classifier evasion',
-      url='https://github.com/srndic/mimicus',
-      download_url='https://github.com/srndic/mimicus/tarball/master',
-      author='Nedim Srndic, Pavel Laskov',
-      author_email='nedim.srndic@uni-tuebingen.de',
-      license='GPLv3',
-      packages=find_packages(),
-      install_requires=['matplotlib >= 1.1.1rc', 
-                        'numpy >= 1.6.1', 
-                        'scikit_learn >= 0.13.1', 
-                        'scipy >= 0.9.0'],
-      zip_safe=False,
-      test_suite='nose.collector',
-      tests_require=['nose'],
-      include_package_data=True,
-      cmdclass={'install': MyInstall,
-                'develop': MyDevelop})
+setup(
+    name='mimicus',
+    version='1.0',
+    description='A library for adversarial classifier evasion',
+    url='https://github.com/srndic/mimicus',
+    download_url='https://github.com/srndic/mimicus/tarball/master',
+    author='Nedim Srndic, Pavel Laskov',
+    author_email='nedim.srndic@uni-tuebingen.de',
+    license='GPLv3',
+    packages=find_packages(),
+    install_requires=[
+        'matplotlib >= 1.1.1rc',
+        'numpy >= 1.6.1',
+        'scikit_learn >= 0.13.1',
+        'scipy >= 0.9.0'
+    ],
+    zip_safe=False,
+    test_suite='nose.collector',
+    tests_require=['nose'],
+    include_package_data=True,
+    cmdclass={
+        'install': MyInstall,
+        'develop': MyDevelop
+    }
+)

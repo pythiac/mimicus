@@ -29,12 +29,12 @@ import sys
 
 from mimicus.tools.featureedit import FeatureEdit
 
-def mimicry(wolf_path, targets, classifier, 
+def mimicry(wolf_path, targets, classifier,
             standardizer=None, verbose=False, trials=30):
     '''
-    For every malicious file, mimic random benign files 'trials' times and 
-    classify the result using 'classifier' to find the best mimicry 
-    sample. 
+    For every malicious file, mimic random benign files 'trials' times and
+    classify the result using 'classifier' to find the best mimicry
+    sample.
     '''
     wolf = FeatureEdit(wolf_path)
     best_ben_path = ''
@@ -47,7 +47,7 @@ def mimicry(wolf_path, targets, classifier,
     if verbose:
         sys.stdout.write('  Modifying {path} [{score}]:\n'
                          .format(path=wolf_path, score=wolf_score))
-    for rand_i in random.sample(range(len(targets)), trials):
+    for rand_i in random.sample(list(range(len(targets))), trials):
         target_path, target = targets[rand_i]
         mimic = wolf.modify_file(target.copy())
         mimic_feats = mimic['feats']

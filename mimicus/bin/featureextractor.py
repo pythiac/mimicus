@@ -19,9 +19,9 @@ along with Mimicus.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################
 feature_extractor.py
 
-This program will extract features from all files whose filename ends 
-in .pdf in the directory or file list given and save them in CSV 
-format in the given file. 
+This program will extract features from all files whose filename ends
+in .pdf in the directory or file list given and save them in CSV
+format in the given file.
 
 Created on May 16, 2013.
 '''
@@ -56,16 +56,16 @@ def extract_features(pdfs_ben, pdfs_mal, csv_name):
             feat_vecs.append(feats)
             labels.append(1.0)
             file_names.append(pdf)
-    
+
     for pdf, feats in pool.imap(get_features, pdfs_ben):
         if feats is not None:
             feat_vecs.append(feats)
             labels.append(0.0)
             file_names.append(pdf)
-    
+
     # Convert the data points into numpy.array
-    X = numpy.array(numpy.zeros((len(feat_vecs), 
-                                 featureedit.FeatureDescriptor.get_feature_count())), 
+    X = numpy.array(numpy.zeros((len(feat_vecs),
+                                 featureedit.FeatureDescriptor.get_feature_count())),
                                  dtype=numpy.float64, order='C')
     for i, v in enumerate(feat_vecs):
         X[i, :] = v
@@ -78,7 +78,7 @@ def main():
     parser.add_argument('--mal', help='Malicious PDFs (directory or file with list of paths)')
     parser.add_argument('--ben', help='Benign PDFs (directory or file with list of paths)')
     parser.add_argument('csv', help='Resulting CSV file')
-    
+
     # Process arguments
     args = parser.parse_args()
     pdfs_mal, pdfs_ben = [], []
@@ -86,7 +86,7 @@ def main():
         pdfs_mal = sorted(utility.get_pdfs(args.mal))
     if args.ben:
         pdfs_ben = sorted(utility.get_pdfs(args.ben))
-    
+
     extract_features(pdfs_ben, pdfs_mal, args.csv)
     return 0
 

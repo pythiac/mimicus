@@ -35,12 +35,12 @@ def main():
     parser.add_argument('--plot', help='Where to save plot (file name)',
                         default=False)
     args = parser.parse_args()
-    
+
     # Perform the attacks
     scenario_name = 'F'
     attack_mimicry(scenario_name, args.plot)
     attack_gdkde(scenario_name, args.plot)
-    
+
     return 0
 
 if __name__ == '__main__':

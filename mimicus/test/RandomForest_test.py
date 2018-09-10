@@ -35,29 +35,29 @@ class RandomForest_Test(unittest.TestCase):
     '''
     Tests for the RandomForest class.
     '''
-    
+
     def setUp(self):
         self.rf = RandomForest()
-    
+
     def test_constructor(self):
         _ = RandomForest()
-    
+
     def test_decision_function(self):
         X, y, _ = datasets.csv2numpy(config.get('RandomForest_test', 'traindata'))
         self.rf.fit(X, y)
         newX, _, _ = datasets.csv2numpy(config.get('RandomForest_test', 'noveldata'))
         self.assertTrue(len(self.rf.decision_function(newX)) == 20)
-    
+
     def test_fit(self):
         X, y, _ = datasets.csv2numpy(config.get('RandomForest_test', 'traindata'))
         self.rf.fit(X, y)
-    
+
     def test_predict(self):
         X, y, _ = datasets.csv2numpy(config.get('RandomForest_test', 'traindata'))
         self.rf.fit(X, y)
         newX, _, _ = datasets.csv2numpy(config.get('RandomForest_test', 'noveldata'))
         self.assertTrue(len(self.rf.predict(newX)) == 20)
-    
+
     def test_save_model(self):
         X, y, _ = datasets.csv2numpy(config.get('RandomForest_test', 'traindata'))
         self.rf.fit(X, y)
@@ -65,7 +65,7 @@ class RandomForest_Test(unittest.TestCase):
         self.assertTrue(len(self.rf.predict(newX)) == 20)
         self.rf.save_model(config.get('RandomForest_test', 'modelfile'))
         os.remove(config.get('RandomForest_test', 'modelfile'))
-    
+
     def test_load_model(self):
         X, y, _ = datasets.csv2numpy(config.get('RandomForest_test', 'traindata'))
         self.rf.fit(X, y)

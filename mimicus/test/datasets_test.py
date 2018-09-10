@@ -34,7 +34,7 @@ class datasets_Test(unittest.TestCase):
     '''
     def setUp(self):
         pass
-    
+
     def test_standardize_csv(self):
         datasets.standardize_csv(config.get('datasets_test', 'csv_in'), config.get('datasets_test', 'csv_temp'))
         os.remove(config.get('datasets_test', 'csv_temp'))

@@ -30,8 +30,8 @@ from sklearn.metrics import accuracy_score, confusion_matrix
 
 def print_stats_cutoff(y_true, y_pred, cutoffs):
     '''
-    Prints experiment results (accuracy and confusion matrix) for the given 
-    list of cutoff points for classifiers which give a real-valued output. 
+    Prints experiment results (accuracy and confusion matrix) for the given
+    list of cutoff points for classifiers which give a real-valued output.
     '''
     for cutoff in cutoffs:
         sys.stdout.write('Cutoff: {}\n'.format(cutoff))
@@ -45,8 +45,8 @@ def print_stats_cutoff(y_true, y_pred, cutoffs):
 
 def print_stats_binary(y_true, y_pred):
     '''
-    Prints experiment results (accuracy and confusion matrix) for 
-    classifiers which give a binary output. 
+    Prints experiment results (accuracy and confusion matrix) for
+    classifiers which give a binary output.
     '''
     score = accuracy_score(y_true, y_pred)
     sys.stdout.write('Accuracy: {}\n'.format(score))
@@ -66,24 +66,24 @@ def file_sha256_hash(filename):
         while data:
             checksum_builder.update(data)
             data = infile.read(BLOCK_SIZE)
-    
+
     return checksum_builder.hexdigest()
 
 def get_pdfs(source):
     '''
-    Returns a list of all PDF files found in the given source. 
-    
-    source - a directory containing PDF files or a file with a list of 
-        newline-separated paths to PDF files. 
+    Returns a list of all PDF files found in the given source.
+
+    source - a directory containing PDF files or a file with a list of
+        newline-separated paths to PDF files.
     '''
     pdfs = []
     if os.path.isdir(source):
-        pdfs = [os.path.join(source, f) for f in os.listdir(source) if 
-                os.path.isfile(os.path.join(source, f)) and 
+        pdfs = [os.path.join(source, f) for f in os.listdir(source) if
+                os.path.isfile(os.path.join(source, f)) and
                 os.path.splitext(f)[1] == '.pdf']
     else:
         pdfs = open(source, 'rb').read().splitlines()
-    pdfs = map(os.path.abspath, pdfs)
+    pdfs = list(map(os.path.abspath, pdfs))
     return pdfs
 
 def mkdir_p(path):

@@ -30,16 +30,16 @@ from mimicus.tools import utility
 
 class PdfrateQueryHandler(object):
     '''
-    A class representing a simple interface for submitting files 
-    to PDFrate and querying the results. 
-    
-    It enables reliable (optionally anonymized) communication with 
-    PDFrate and randomly schedules queries in time. Use this class 
-    for your submissions. 
-    
-    PDFrate queries for file submission and report retrieval return JSON 
+    A class representing a simple interface for submitting files
+    to PDFrate and querying the results.
+
+    It enables reliable (optionally anonymized) communication with
+    PDFrate and randomly schedules queries in time. Use this class
+    for your submissions.
+
+    PDFrate queries for file submission and report retrieval return JSON
     reports such as this one:
-    
+
     {
         "report_url":"http:\/\/pdfrate.com\/view\/00a544f460df17c90481cef1a7399ae1db6e0efe963de2bbd1060915990a799c",
         "fileinfo":{
@@ -73,14 +73,14 @@ class PdfrateQueryHandler(object):
             }
         }
     }
-    
-    These JSON replies are then converted into Python dictionaries and 
-    an additional top-level field 'success' is inserted with a boolean 
-    value indicating if the query was performed successfully, i.e., file 
-    submission was successful or the report was retrieved. 
-    
+
+    These JSON replies are then converted into Python dictionaries and
+    an additional top-level field 'success' is inserted with a boolean
+    value indicating if the query was performed successfully, i.e., file
+    submission was successful or the report was retrieved.
+
     PDFrate queries for metadata retrieval return strings such as this one:
-    
+
     00000000             Size: 1170
     00000000           Header: %PDF-1.4
     000002E7     CreationDate: D:20130320133300+01'00'
@@ -128,11 +128,11 @@ class PdfrateQueryHandler(object):
     000003F8        Structure: 8 0 R
     0000047E        Structure: startxref
     0000048D        Structure: %EOF
-    
-    These are then saved in the 'metadata' field of a Python dictionary 
-    and returned as result. An additional field 'success' is inserted with 
-    a boolean value indicating if the query was performed successfully, 
-    i.e., metadata was retrieved. 
+
+    These are then saved in the 'metadata' field of a Python dictionary
+    and returned as result. An additional field 'success' is inserted with
+    a boolean value indicating if the query was performed successfully,
+    i.e., metadata was retrieved.
     '''
 
     def __init__(self):
@@ -141,42 +141,42 @@ class PdfrateQueryHandler(object):
         '''
         self.query_dir = config.get('pdfratequeryscheduler', 'query_dir')
         self.reply_dir = config.get('pdfratequeryscheduler', 'reply_dir')
-    
+
     def _get_query_for_file(self, filename):
         '''
-        Given a file, generates the path to the query file for it. 
+        Given a file, generates the path to the query file for it.
         '''
         sha256 = utility.file_sha256_hash(filename)
         return os.path.join(self.query_dir, '{0}.json'.format(sha256))
-    
+
     def _get_reply_for_file(self, filename):
         '''
-        Given a file, generates the path to the reply file for it. 
+        Given a file, generates the path to the reply file for it.
         '''
         sha256 = utility.file_sha256_hash(filename)
         return os.path.join(self.reply_dir, '{0}.json'.format(sha256))
-    
+
     def submit_query(self, filename, get_metadata=False, force=False, priority=0):
         '''
-        Submits the specified file to PDFrate and returns the query dictionary if 
-        it was a new submission, otherwise returns an empty dictionary. 
-        
-        If the file was already submitted in the past, it does nothing. You 
-        can force it to resubmit a previously submitted file by setting 
-        'force' to True. By default, it will only return a classification 
-        report from PDFrate. If you want it to also return file metadata, 
-        set 'get_metadata' to True. You can set a scheduling priority for 
-        this file using the 'priority' argument. 
-        
-        This method will submit the file to PDFrate asynchronously and return 
-        control to the caller. It will not wait for the results from PDFrate. 
-        In order to get the PDFrate results, use the poll() method of this 
-        class. You should poll it from time to time, as it may take some time 
-        for the results to get in, depending on the settings of 
-        pdfratequeryscheduler. 
-        
+        Submits the specified file to PDFrate and returns the query dictionary if
+        it was a new submission, otherwise returns an empty dictionary.
+
+        If the file was already submitted in the past, it does nothing. You
+        can force it to resubmit a previously submitted file by setting
+        'force' to True. By default, it will only return a classification
+        report from PDFrate. If you want it to also return file metadata,
+        set 'get_metadata' to True. You can set a scheduling priority for
+        this file using the 'priority' argument.
+
+        This method will submit the file to PDFrate asynchronously and return
+        control to the caller. It will not wait for the results from PDFrate.
+        In order to get the PDFrate results, use the poll() method of this
+        class. You should poll it from time to time, as it may take some time
+        for the results to get in, depending on the settings of
+        pdfratequeryscheduler.
+
         A query is a JSON object representing a Python dictionary such as this one:
-         
+
         {
             'datetime' : UNIX timestamp when the query was *first* submitted; used for scheduling on a first-come, first-served basis
             'get_metadata' : a boolean indicating whether to retrieve file metadata from PDFrate or not
@@ -198,7 +198,7 @@ class PdfrateQueryHandler(object):
             if updated:
                 json.dump(query, open(queryfile, 'w+'))
             return {}
-        
+
         replyfile = self._get_reply_for_file(filename)
         if force == False and os.path.exists(replyfile):
             # Reply already exists
@@ -210,7 +210,7 @@ class PdfrateQueryHandler(object):
             if 'metadata' in reply:
                 # Nope, already retrieved
                 return {}
-        
+
         # Submit file
         query = {'datetime':int(time.mktime(time.localtime()))}
         query['get_metadata'] = get_metadata
@@ -218,13 +218,13 @@ class PdfrateQueryHandler(object):
         query['priority'] = priority
         json.dump(query, open(queryfile, 'w+'))
         return query
-    
+
     def poll(self, filename):
         '''
-        Returns the PDFrate reply for the given file. 
-        
+        Returns the PDFrate reply for the given file.
+
         The reply is a dictionary such as the following:
-        
+
         {
             'status' : the only field guaranteed to be present, one of the following values
                 'success' - reply successfully obtained
@@ -251,7 +251,7 @@ class PdfrateQueryHandler(object):
         else:
             reply = json.load(open(replyfile, 'r'))
             if 'results' in reply:
-                for result in reply['results'].keys():
-                    for classifier in reply['results'][result].keys():
+                for result in list(reply['results'].keys()):
+                    for classifier in list(reply['results'][result].keys()):
                         reply['results'][result][classifier] = float(reply['results'][result][classifier]) / 100.0
             return reply

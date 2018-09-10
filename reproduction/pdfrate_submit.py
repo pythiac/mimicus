@@ -19,8 +19,8 @@ along with Mimicus.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################
 pdfrate_submit.py
 
-Given a list of PDF files in a file or a directory, this script will 
-submit those files to PDFrate. 
+Given a list of PDF files in a file or a directory, this script will
+submit those files to PDFrate.
 
 Created on June 12, 2013
 '''
@@ -34,14 +34,14 @@ from mimicus.tools.pdfratequeryhandler import PdfrateQueryHandler
 def main():
     # Setup argument parser
     parser = ArgumentParser()
-    parser.add_argument('pdfs', 
+    parser.add_argument('pdfs',
                         help='Input PDFs (directory or file with path list)')
-    parser.add_argument('--priority', type=int, default=0, 
+    parser.add_argument('--priority', type=int, default=0,
                         help='Submission priority')
-    
+
     # Process arguments
     args = parser.parse_args()
-    
+
     pdfs = sorted(utility.get_pdfs(args.pdfs))
     sys.stdout.write("Submitting files to PDFrate:\n\n")
     handler = PdfrateQueryHandler()

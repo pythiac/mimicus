@@ -35,7 +35,7 @@ def main():
     parser.add_argument('--plot', help='Where to save plot (file name)',
                         default=False)
     args = parser.parse_args()
-    
+
     # Perform the attack
     scenario_name = 'FTC'
     attack_mimicry(scenario_name, args.plot)

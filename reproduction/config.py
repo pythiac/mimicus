@@ -18,22 +18,22 @@ along with Mimicus.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################
 config.py
 
-A module that parses the configuration file 'custom.conf' 
-and exposes an object called 'config'. Include this module for automatic 
-parsing of configuration options. 
+A module that parses the configuration file 'custom.conf'
+and exposes an object called 'config'. Include this module for automatic
+parsing of configuration options.
 
 Created on March 26, 2013.
 '''
 
-import ConfigParser
+import configparser
 import os
 import sys
 
 '''
-The configuration object of type SafeConfigParser. Use it to get() 
-options from the configuration file. 
+The configuration object of type SafeConfigParser. Use it to get()
+options from the configuration file.
 '''
-config = ConfigParser.SafeConfigParser()
+config = configparser.SafeConfigParser()
 
 '''
 Helper function to reduce typing effort.
@@ -42,13 +42,13 @@ get = config.get
 
 def parse_config():
     '''
-    Parses the configuration file 'custom.conf' if it exists, otherwise 
-    creates it by copying 'default.conf'. 
+    Parses the configuration file 'custom.conf' if it exists, otherwise
+    creates it by copying 'default.conf'.
     '''
     # default.conf and custom.conf must reside in the same directory as this file
     config_dir = os.path.dirname(__file__)
     custom_conf = os.path.join(config_dir, 'custom.conf')
-    
+
     # If it's missing, generate the custom.conf file
     custom_conf_created = False
     if not os.path.exists(custom_conf):
@@ -59,19 +59,19 @@ def parse_config():
         except:
             sys.stderr.write('Error: Unable to create file "custom.conf".')
             sys.exit(1)
-    
+
     # Parse the configuration
     global config
     config.readfp(open(custom_conf))
-    
+
     # Try using the directory of this file as the project root on first run
     if custom_conf_created:
         project_dir = os.path.dirname(config_dir)
         config.set('DEFAULT', 'project_root', project_dir)
         config.write(open(custom_conf, 'wb'))
-    
+
     # A naive way to check if the configuration file was customized
-    if (config.get('DEFAULT', 'project_root') == '/dev/null' or 
+    if (config.get('DEFAULT', 'project_root') == '/dev/null' or
             not os.path.exists(config.get('DEFAULT', 'project_root'))):
         sys.stderr.write(('{d}\n\n'
             'Please customize your configuration file "{f}". See the README '

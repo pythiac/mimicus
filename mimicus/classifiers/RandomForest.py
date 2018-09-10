@@ -18,18 +18,18 @@ along with Mimicus.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################
 RandomForest.py
 
-Implements the RandomForest class. If the rpy2 interface to R or 
-the R randomForest package are unavailable, uses the scikit_learn 
-implementation instead. 
+Implements the RandomForest class. If the rpy2 interface to R or
+the R randomForest package are unavailable, uses the scikit_learn
+implementation instead.
 
 Created on March 7, 2014.
 '''
 
 '''
-Concrete implementation will be decided based on the availability 
-of the rpy2 Python package, the R programming language and its 
-randomForest package. If they are not available, scikit_learn 
-implementation is used instead. 
+Concrete implementation will be decided based on the availability
+of the rpy2 Python package, the R programming language and its
+randomForest package. If they are not available, scikit_learn
+implementation is used instead.
 '''
 RandomForest = 0
 try:
@@ -41,12 +41,12 @@ except:
                      'falling back to scikit_learn.\n')
     from sklearn.ensemble import RandomForestClassifier
     import pickle
-    
+
     class sklearn_RF(RandomForestClassifier):
         '''
         A customized version of the scikit_learn Random Forest.
         '''
-        
+
         def __init__(self,
                      n_estimators=1000, # Used by PDFrate
                      criterion="gini",
@@ -62,7 +62,7 @@ except:
             '''
             Constructor.
             '''
-            super(sklearn_RF, 
+            super(sklearn_RF,
                   self).__init__(n_estimators = n_estimators,
                                  criterion = criterion,
                                  max_depth = max_depth,
@@ -74,27 +74,27 @@ except:
                                  n_jobs = n_jobs,
                                  random_state = random_state,
                                  verbose = verbose)
-        
+
         def decision_function(self, X):
             '''
             Returns the class probability of the given samples.
             '''
             return self.predict_proba(X)[:, [1]]
-        
+
         def save_model(self, model_file):
             '''
-            Saves a trained model into the specified file. 
-            
+            Saves a trained model into the specified file.
+
             model_file - name of the file where the model should be saved.
             '''
             pickle.dump(self.__dict__, open(model_file, 'wb+'))
-        
+
         def load_model(self, model_file):
             '''
-            Loads a trained model from the specified file. 
-            
+            Loads a trained model from the specified file.
+
             model_file - name of the file where the model is saved.
             '''
             self.__dict__.update(pickle.load(open(model_file, 'rb')))
-    
+
     RandomForest = sklearn_RF

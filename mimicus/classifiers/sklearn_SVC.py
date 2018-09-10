@@ -29,43 +29,43 @@ from sklearn.svm import SVC
 
 class sklearn_SVC(SVC):
     '''
-    A class representing the Support Vector Machine classifier as implemented 
-    by scikit-learn. 
+    A class representing the Support Vector Machine classifier as implemented
+    by scikit-learn.
     '''
 
-    def __init__(self, 
+    def __init__(self,
                  C=10, # Found using grid search
-                 kernel='rbf', 
-                 degree=3, 
+                 kernel='rbf',
+                 degree=3,
                  gamma=0.01, # Found using grid search
-                 coef0=0.0, 
-                 shrinking=True, 
-                 probability=False, 
-                 tol=0.001, 
-                 cache_size=200, 
-                 class_weight=None, 
-                 verbose=False, 
+                 coef0=0.0,
+                 shrinking=True,
+                 probability=False,
+                 tol=0.001,
+                 cache_size=200,
+                 class_weight=None,
+                 verbose=False,
                  max_iter=-1):
         '''
         Constructor
         '''
-        super(sklearn_SVC, self).__init__(C=C, kernel=kernel, degree=degree, gamma=gamma, 
-                       coef0=coef0, shrinking=shrinking, probability=probability, 
-                       tol=tol, cache_size=cache_size, class_weight=class_weight, 
+        super(sklearn_SVC, self).__init__(C=C, kernel=kernel, degree=degree, gamma=gamma,
+                       coef0=coef0, shrinking=shrinking, probability=probability,
+                       tol=tol, cache_size=cache_size, class_weight=class_weight,
                        verbose=verbose, max_iter=max_iter)
-    
+
     def save_model(self, modelfile):
         '''
-        Saves a trained SVM model into the specified file. 
-        
+        Saves a trained SVM model into the specified file.
+
         modelfile - name of the file where the model should be saved.
         '''
         pickle.dump(self.__dict__, open(modelfile, 'wb+'))
-    
+
     def load_model(self, modelfile):
         '''
-        Loads a trained SVM model from the specified file. 
-        
+        Loads a trained SVM model from the specified file.
+
         modelfile - name of the file where the model is saved.
         '''
 #         self.svc = pickle.load(open(modelfile, 'rb'))

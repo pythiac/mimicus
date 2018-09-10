@@ -31,30 +31,30 @@ class PdfrateProxyError(IOError):
     '''
     A class representing an exception when communicating with PDFrate.
     '''
-    
+
     def __init__(self, message, *args, **kwargs):
         self.message = message
         IOError.__init__(self, *args, **kwargs)
-    
+
     def __str__(self):
         return self.message
 
 class PdfrateProxy(object):
     '''
-    A class representing a local proxy object for PDFrate. Submit your 
-    PDFrate queries to this class and it will run them against PDFrate. 
-    It's not designed be used directly, but by a query scheduler. For 
-    batch or manual submissions, use the PdfrateQueryHandler class. 
+    A class representing a local proxy object for PDFrate. Submit your
+    PDFrate queries to this class and it will run them against PDFrate.
+    It's not designed be used directly, but by a query scheduler. For
+    batch or manual submissions, use the PdfrateQueryHandler class.
     '''
 
     def __init__(self):
         '''
-        Constructor. 
+        Constructor.
         '''
         self.submit_url = config.get('pdfrateproxy', 'submit_url')
         self.report_url = config.get('pdfrateproxy', 'report_url')
         self.metadata_url = config.get('pdfrateproxy', 'metadata_url')
-    
+
     def _invoke_curl(self, url, infile=None):
         '''
         Runs a child curl process that communicates to PDFrate.
@@ -69,7 +69,7 @@ class PdfrateProxy(object):
         if curl.returncode != 0 and stderrdata is not None and len(stderrdata) > 0:
             raise PdfrateProxyError(stderrdata)
         return stdoutdata
-    
+
     def submit_file(self, infile):
         '''
         Submits a PDF file to PDFrate and returns the JSON result as a Python dictionary.
@@ -79,21 +79,21 @@ class PdfrateProxy(object):
         reply = json.loads(self._invoke_curl(self.submit_url, infile))
         reply['status'] = 'success' if reply['fileinfo']['size'] > 0 else 'failsubmit'
         return reply
-    
+
     def get_report(self, search_hash):
         '''
-        Searches on PDFrate for the classification report (in form of a Python dictionary 
-        converted from a JSON object) of a previously submitted PDF file with 
-        the given SHA256 hash. The dictionary has a field 'status' indicating if the 
+        Searches on PDFrate for the classification report (in form of a Python dictionary
+        converted from a JSON object) of a previously submitted PDF file with
+        the given SHA256 hash. The dictionary has a field 'status' indicating if the
         report for this hash exists ('success') or not ('noreport').
         '''
         reply = json.loads(self._invoke_curl(self.report_url.format(search_hash=search_hash)))
         reply['status'] = 'success' if reply['fileinfo']['size'] > 0 else 'noreport'
         return reply
-    
+
     def get_metadata(self, search_hash):
         '''
-        Searches on PDFrate for the metadata (a string) of a previously submitted PDF 
+        Searches on PDFrate for the metadata (a string) of a previously submitted PDF
         file with the given SHA256 hash. Returns a dictionary with two fields:
           'metadata' - the metadata itself
           'status' a boolean indicating if the metadata for this hash exists.

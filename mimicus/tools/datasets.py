@@ -30,17 +30,17 @@ from mimicus.tools.featureedit import FeatureDescriptor
 
 def csv2numpy(csv_in):
     '''
-    Parses a CSV input file and returns a tuple (X, y) with 
-    training vectors (numpy.array) and labels (numpy.array), respectfully. 
-    
-    csv_in - name of a CSV file with training data points; 
-                the first column in the file is supposed to be named 
-                'class' and should contain the class label for the data 
-                points; the second column of this file will be ignored 
-                (put data point ID here). 
+    Parses a CSV input file and returns a tuple (X, y) with
+    training vectors (numpy.array) and labels (numpy.array), respectfully.
+
+    csv_in - name of a CSV file with training data points;
+                the first column in the file is supposed to be named
+                'class' and should contain the class label for the data
+                points; the second column of this file will be ignored
+                (put data point ID here).
     '''
     # Parse CSV file
-    csv_rows = list(csv.reader(open(csv_in, 'rb')))
+    csv_rows = list(csv.reader(open(csv_in, 'r')))
     classes = {'FALSE':0, 'TRUE':1}
     rownum = 0
     # Count exact number of data points
@@ -72,30 +72,30 @@ def csv2numpy(csv_in):
 
 def numpy2csv(csv_out, X, y, file_names=None):
     '''
-    Creates a CSV file from the given data points (X, scipy matrix) and labels 
-    (y, numpy.array). The CSV file has a header. The first column is named 
-    'class' and the others after PDFrate features. All features are written 
-    in their respective type format (e.g., True/False for booleans). 
-    
-    If 'csv_out' is an open Python file, it will not be reopened. If 
-    it is a string, a file will be created with that name. 
+    Creates a CSV file from the given data points (X, scipy matrix) and labels
+    (y, numpy.array). The CSV file has a header. The first column is named
+    'class' and the others after PDFrate features. All features are written
+    in their respective type format (e.g., True/False for booleans).
+
+    If 'csv_out' is an open Python file, it will not be reopened. If
+    it is a string, a file will be created with that name.
     '''
     we_opened_csvfile = type(csv_out) == str
     csvfile = open(csv_out, 'wb+') if we_opened_csvfile else csv_out
     # Write header
-    csvfile.write('class')
+    csvfile.write('class'.encode())
     if file_names:
-        csvfile.write(',filename')
+        csvfile.write(',filename'.encode())
     names = FeatureDescriptor.get_feature_names()
     for name in names:
-        csvfile.write(',{}'.format(name))
-    csvfile.write('\n')
+        csvfile.write(',{}'.format(name).encode())
+    csvfile.write('\n'.encode())
     descs = FeatureDescriptor.get_feature_descriptions()
     # Write data
     for i in range(0, X.shape[0]):
-        csvfile.write('{}'.format('TRUE' if bool(y[i]) else 'FALSE'))
+        csvfile.write('{}'.format('TRUE' if bool(y[i]) else 'FALSE').encode())
         if file_names:
-            csvfile.write(',{}'.format(file_names[i]))
+            csvfile.write(',{}'.format(file_names[i]).encode())
         for j in range(0, X.shape[1]):
             feat_type = descs[names[j]]['type']
             feat_val = X[i, j]
@@ -103,21 +103,21 @@ def numpy2csv(csv_out, X, y, file_names=None):
                 feat_val = 'TRUE' if feat_val >= 0.5 else 'FALSE'
             elif feat_type == int:
                 feat_val = int(round(feat_val))
-            csvfile.write(',{}'.format(feat_val))
-        csvfile.write('\n')
-    
+            csvfile.write(',{}'.format(feat_val).encode())
+        csvfile.write('\n'.encode())
+
     if we_opened_csvfile:
         csvfile.close()
 
 def standardize_csv(csv_in, csv_out, standardizer=None):
     '''
-    Standardizes data (subtracts the mean and divides by the standard deviation 
-    every feature independently for every data point) from a CSV file 'csv_in' 
-    and writes it into 'csv_out'. If no 'standardizer' 
-    (sklearn.preprocessing.StandardScaler) is provided, one will be created 
-    and fit on the dataset from the input CSV file. 
-    
-    Returns the standardizer so you can use it for other datasets. 
+    Standardizes data (subtracts the mean and divides by the standard deviation
+    every feature independently for every data point) from a CSV file 'csv_in'
+    and writes it into 'csv_out'. If no 'standardizer'
+    (sklearn.preprocessing.StandardScaler) is provided, one will be created
+    and fit on the dataset from the input CSV file.
+
+    Returns the standardizer so you can use it for other datasets.
     '''
     X, y, file_names = csv2numpy(csv_in)
 #     X = X.todense()

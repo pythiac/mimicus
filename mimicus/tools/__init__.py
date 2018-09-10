@@ -20,6 +20,5 @@ along with Mimicus.  If not, see <http://www.gnu.org/licenses/>.
 Created on February 5, 2013.
 '''
 
-from featureedit import FeatureEdit, \
-                        FeatureDescriptor, \
-                        features_inverse_standardize
+from mimicus.tools.featureedit import (
+    FeatureDescriptor, FeatureEdit, features_inverse_standardize)
